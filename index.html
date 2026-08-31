@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4efe7" />
+<title>Self & Society</title>
+<style>
+  :root{
+    --bg:#f4efe7;
+    --panel:#fffdf9;
+    --ink:#1f2a2b;
+    --muted:#6f7774;
+    --line:#d9d4ca;
+    --accent:#315c55;
+    --accent-soft:#dfe9e5;
+    --warm:#c58b5b;
+    --shadow:0 10px 28px rgba(30,45,42,.08);
+    --radius:22px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  button,input,textarea{font:inherit}
+  button{cursor:pointer}
+  .app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);padding-bottom:92px}
+  header{
+    padding:22px 18px 10px;position:sticky;top:0;background:linear-gradient(var(--bg) 80%,rgba(244,239,231,0));
+    z-index:3;
+  }
+  .topline{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .brand{font-weight:800;letter-spacing:.04em;font-size:15px}
+  .pill{font-size:12px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.45)}
+  main{padding:8px 18px 24px}
+  h1{font-size:34px;line-height:1.02;margin:8px 0 12px;letter-spacing:-.04em}
+  h2{font-size:24px;margin:6px 0 10px;letter-spacing:-.025em}
+  h3{font-size:17px;margin:0 0 8px}
+  p{line-height:1.5}
+  .lede{color:var(--muted);font-size:16px;margin:0 0 20px}
+  .card{
+    background:var(--panel);border:1px solid rgba(217,212,202,.85);border-radius:var(--radius);
+    padding:18px;margin:12px 0;box-shadow:var(--shadow);
+  }
+  .card.flat{box-shadow:none}
+  .card button{width:100%}
+  .hero{
+    background:linear-gradient(135deg,#f9f4ec,#e3ebe7);
+    padding:22px;border-radius:28px;border:1px solid #ddd6c9;margin-bottom:16px;
+  }
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.13em;color:var(--accent);text-transform:uppercase}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .topic{
+    min-height:132px;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:16px;
+    color:var(--ink);box-shadow:0 5px 18px rgba(30,45,42,.05)
+  }
+  .topic .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .topic strong{display:block;font-size:18px;line-height:1.12;margin-top:7px}
+  .topic small{display:block;color:var(--muted);margin-top:9px;line-height:1.35}
+  .primary,.secondary,.ghost{
+    border-radius:16px;padding:14px 16px;border:none;font-weight:750;
+  }
+  .primary{background:var(--accent);color:white}
+  .secondary{background:var(--accent-soft);color:var(--accent)}
+  .ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .stack{display:grid;gap:10px}
+  .choice{
+    display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);background:#fff;border-radius:16px;
+    padding:13px 14px;margin:9px 0;
+  }
+  .choice input{margin-top:3px}
+  .choice.selected{border-color:var(--accent);background:var(--accent-soft)}
+  textarea{
+    width:100%;min-height:120px;border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff;
+    resize:vertical;color:var(--ink)
+  }
+  .stagebar{display:flex;gap:6px;margin:14px 0 18px}
+  .stage{height:7px;flex:1;border-radius:999px;background:#ddd8cf}
+  .stage.on{background:var(--accent)}
+  .callout{border-left:4px solid var(--warm);padding:12px 14px;background:#fbf2ea;border-radius:12px;margin:14px 0}
+  .lensrow{display:flex;flex-wrap:wrap;gap:8px}
+  .lens{border:1px solid var(--line);border-radius:999px;padding:9px 12px;background:#fff}
+  .lens.on{background:var(--accent);color:white;border-color:var(--accent)}
+  .journal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .journal-opt{border:1px solid var(--line);border-radius:18px;background:#fff;padding:18px 12px;text-align:left;min-height:92px}
+  .journal-opt strong{display:block;font-size:16px}
+  .journal-opt span{font-size:12px;color:var(--muted)}
+  .reflection-row{display:grid;grid-template-columns:1fr;gap:10px}
+  .promptlabel{font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--accent)}
+  .confidence{display:grid;gap:9px}
+  .conf{padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;text-align:left}
+  .conf.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .progress-card{display:flex;align-items:center;gap:14px}
+  .ring{
+    width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:800;
+    background:conic-gradient(var(--accent) 0 58%, #d9d4ca 58% 100%);
+  }
+  .ring:after{content:"";width:42px;height:42px;border-radius:50%;background:var(--panel);position:absolute}
+  .ring span{z-index:1}
+  .ringwrap{position:relative;width:56px;height:56px;display:grid;place-items:center}
+  nav{
+    position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(480px,100%);
+    background:rgba(255,253,249,.96);border-top:1px solid var(--line);backdrop-filter:blur(14px);
+    display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:5
+  }
+  nav button{border:none;background:transparent;padding:8px 2px;color:var(--muted);font-size:11px}
+  nav button.active{color:var(--accent);font-weight:800}
+  .hidden{display:none!important}
+  .mini{font-size:13px;color:var(--muted)}
+  .divider{height:1px;background:var(--line);margin:18px 0}
+  .kicker{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px}
+  @media (min-width:700px){
+    body{background:#e8e2d9}
+    .app{box-shadow:0 0 40px rgba(0,0,0,.08)}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="topline">
+    <div class="brand">SELF & SOCIETY</div>
+    <div class="pill" id="statusPill">Reflective companion</div>
+  </div>
+</header>
+
+<main id="view"></main>
+
+<nav>
+  <button data-route="home" class="active">Home</button>
+  <button data-route="explore">Explore</button>
+  <button data-route="journal">Journal</button>
+  <button data-route="reflect">Reflect</button>
+  <button data-route="learning">My Learning</button>
+</nav>
+</div>
+
+<script>
+const topics = [
+  {id:"identity", tag:"SELF", title:"Identity", desc:"Roles, belonging, self and social identity"},
+  {id:"society", tag:"PEOPLE", title:"Society & Relationships", desc:"Interdependence, institutions and participation"},
+  {id:"culture", tag:"CULTURE", title:"Culture", desc:"Beliefs, practices, language and meaning"},
+  {id:"norms", tag:"EVERYDAY LIFE", title:"Rules & Norms", desc:"Written rules and unwritten expectations"},
+  {id:"artefacts", tag:"THINGS", title:"Artefacts & Material Culture", desc:"Reading objects, clothing, signs and spaces"},
+  {id:"ecosystem", tag:"SYSTEMS", title:"Social Ecosystem", desc:"Individual, micro, meso, exo and macro"},
+  {id:"issues", tag:"ISSUES", title:"Social Issues & Empathy", desc:"Poverty, inequality, access and collective effort"},
+  {id:"place", tag:"PLACE", title:"Reading Place & Society", desc:"Kannur, campus, mapping and evidence"}
+];
+
+const activities = {
+culture:{
+  intro:"Culture includes shared ways of thinking, behaving, communicating and making meaning. It becomes visible through language, practices, artefacts, spaces and traditions—but not everything about culture is immediately visible.",
+  case:"Think back to the Siddis documentary or the Haldhar Nag film you watched in class.",
+  notice:["Language","Clothing","Music","Occupation","Ritual / practice","Relationships","Places","Artefacts"],
+  lenses:["Identity","Culture","Norms","History","Artefacts","Institutions","Community","Social ecosystem"],
+  question:"Choose one thing you noticed. What was directly visible or heard, and what meaning did you give it?",
+  perspective:"How might someone from within that community describe the same situation differently from an outsider?",
+  journal:"Return to your earlier reflection or journal page. Add one new interpretation you understand differently now.",
+  apply:"Choose one practice, object or place from Kannur, your campus, or your own community and analyse it using two cultural lenses."
+},
+norms:{
+  intro:"Rules are formally stated expectations. Norms are often unwritten, learned through participation, observation and social response.",
+  case:"A student enters class ten minutes late. Nobody has explicitly said this is unacceptable, but several people turn and look.",
+  notice:["A formal rule","An informal social norm","A personal preference","A law"],
+  lenses:["Norms","Culture","Identity","Institution","Power","Belonging"],
+  question:"How might a new student learn that a behaviour is expected even when nobody explains it?",
+  perspective:"Could the same behaviour be considered normal in another social or cultural context? Why?",
+  journal:"Identify one unwritten rule on campus. Document it using I SAW / I THINK / I WONDER.",
+  apply:"Find one norm outside college. Does it support coexistence, create exclusion, or both?"
+},
+ecosystem:{
+  intro:"A social ecosystem connects individuals, immediate relationships, institutions and wider cultural or structural forces.",
+  case:"A student regularly misses morning class because the only bus from their village is unreliable.",
+  notice:["Family schedule","Friends / classmates","College timetable","Bus service","Local government","Economic conditions"],
+  lenses:["Individual","Micro","Meso","Exo","Macro","Infrastructure"],
+  question:"Which parts of this situation are within the student's direct control, and which are shaped by larger systems?",
+  perspective:"How might the student, teacher and transport planner explain the same problem differently?",
+  journal:"Draw concentric rings and map the direct and indirect influences around one everyday challenge you face.",
+  apply:"Take one 'individual problem' and zoom out until you can identify at least three wider influences."
+},
+identity:{
+  intro:"Identity develops through how we understand ourselves, how others understand us, and the roles, groups, cultures and experiences we participate in.",
+  case:"Think of a person you met, observed, interviewed, or encountered through the films.",
+  notice:["Role","Language","Clothing","Occupation","Community","Place","Interests","Relationships"],
+  lenses:["Self-identification","Social identity","Role","Belonging","Culture","Representation"],
+  question:"Which parts of this person's identity were visible to you? Which parts may have remained invisible?",
+  perspective:"How could your own background have shaped the way you interpreted that person?",
+  journal:"Create a small identity map using words, sketches, symbols or images. Mark what is visible and what may be hidden.",
+  apply:"Compare how one aspect of your identity becomes more or less visible across home, college and public space."
+},
+society:{
+  intro:"Society is a network of people, groups, institutions, relationships, norms and shared systems through which people live together and depend on one another.",
+  case:"Imagine public transport in your area stops functioning for one week.",
+  notice:["Students","Workers","Businesses","Families","Hospitals","Schools","Local government","Visitors"],
+  lenses:["Interdependence","Institution","Access","Economy","Mobility","Community"],
+  question:"Which social relationships or systems become visible only when they stop working?",
+  perspective:"Who might be affected most, and who might be able to adapt more easily?",
+  journal:"Document one social system you use every day but usually do not notice. Sketch the people and institutions connected to it.",
+  apply:"Choose one everyday service and map who provides it, who depends on it, and what happens when it fails."
+},
+artefacts:{
+  intro:"Artefacts are material or symbolic objects that carry cultural meaning. They can reveal identity, behaviour, access, institutions and power.",
+  case:"Choose one object from your campus, field visit or photo archive: an ID card, bus ticket, sign, garment, tool or building detail.",
+  notice:["Material","Form","Text / symbol","Users","Location","Wear / traces","Access","Ritual / practice"],
+  lenses:["Identity","Culture","Norms","Institution","Access","Power","Economy","Technology"],
+  question:"What can you directly observe about this artefact, and what are you inferring about its social meaning?",
+  perspective:"Would a user, designer, administrator and outsider read this object in the same way?",
+  journal:"Sketch or paste the artefact and annotate it with at least three social connections.",
+  apply:"Choose another ordinary object and connect it to at least three course concepts."
+},
+issues:{
+  intro:"A social issue affects many people, conflicts with shared values, and often requires collective action or policy because its causes are interconnected.",
+  case:"Two students receive the same assignment. One has reliable internet and private workspace; the other does not.",
+  notice:["Same task","Different resources","Different constraints","Access","Opportunity","Support"],
+  lenses:["Equality","Equity","Institution","Structure","Agency","Empathy","Policy"],
+  question:"Is treating everyone the same always fair? What additional information would you need before deciding?",
+  perspective:"How might each student experience the same institutional requirement differently?",
+  journal:"Document one social issue using three layers: what is visible, what may be causing it, and who needs to act.",
+  apply:"Take poverty, education access or another issue and identify why individual effort alone may not solve it."
+},
+place:{
+  intro:"Places can be read as social evidence. People, movement, artefacts, infrastructure, memory, institutions and culture all leave traces in space.",
+  case:"Think back to your NIFT campus mapping or the Kannur / Dharmasala explorations.",
+  notice:["Who stays","Who passes through","Movement","Boundaries","Signs","Activities","Objects","Infrastructure"],
+  lenses:["Space","Identity","Culture","Access","Institution","Mobility","History","Economy"],
+  question:"What is the difference between describing what a place looks like and interpreting what it tells us about society?",
+  perspective:"How might a resident, tourist, worker and administrator experience the same place differently?",
+  journal:"Return to one map or photo. Add people, relationships, movement and one hidden influence you had not shown earlier.",
+  apply:"Choose one small place—a bus stop, beach edge, temple approach, canteen or corridor—and read it through four course concepts."
+}
+};
+
+const journalPrompts = {
+  "Photo":[
+    ["I SAW","What is actually visible?"],
+    ["I THINK","What might it tell you about people, place or society?"],
+    ["I WONDER","What question does the photograph raise?"],
+    ["I CONNECT","Which course concept does this relate to?"],
+    ["I NEED TO FIND OUT","What else would you need before making a stronger interpretation?"]
+  ],
+  "Sketch":[
+    ["I SAW","What did you choose to draw, and what did you leave out?"],
+    ["I THINK","What relationship or pattern does your sketch reveal?"],
+    ["I WONDER","What is still unclear?"],
+    ["I CONNECT","Can you connect the sketch to identity, norms, artefacts, culture or systems?"],
+    ["I NEED TO FIND OUT","What additional observation could strengthen this page?"]
+  ],
+  "Notes":[
+    ["I SAW","Which statement in your notes is evidence rather than interpretation?"],
+    ["I THINK","What pattern appears across your notes?"],
+    ["I WONDER","Which claim needs more evidence?"],
+    ["I CONNECT","What concept helps organise these notes?"],
+    ["I NEED TO FIND OUT","What source could deepen or challenge your understanding?"]
+  ],
+  "Interview":[
+    ["I SAW","What did the person actually say?"],
+    ["I THINK","Why did that statement matter to you?"],
+    ["I WONDER","What follow-up question would you now ask?"],
+    ["I CONNECT","Which course concept does this person's experience connect to?"],
+    ["I NEED TO FIND OUT","Whose perspective is still missing?"]
+  ],
+  "Observation":[
+    ["I SAW","Describe only what you directly observed."],
+    ["I THINK","What might explain the behaviour?"],
+    ["I WONDER","What alternative explanation could exist?"],
+    ["I CONNECT","Which concepts help you read the situation?"],
+    ["I NEED TO FIND OUT","What evidence would help you avoid assumption?"]
+  ],
+  "Map":[
+    ["I SAW","Who and what is represented on your map?"],
+    ["I THINK","What relationships or movement patterns does the map reveal?"],
+    ["I WONDER","What is absent or invisible on the map?"],
+    ["I CONNECT","Which social system or cultural pattern appears spatially?"],
+    ["I NEED TO FIND OUT","What should you observe again before finalising the map?"]
+  ],
+  "Film / Class Learning":[
+    ["I SAW","What idea, scene or discussion do you remember most clearly?"],
+    ["I THINK","Why did it stand out to you?"],
+    ["I WONDER","What question remains unresolved?"],
+    ["I CONNECT","Which two course concepts can you connect to it?"],
+    ["I NEED TO FIND OUT","What would you read, observe or ask next?"]
+  ],
+  "I'm not sure yet":[
+    ["START","Choose one recent class, film, field visit, conversation or everyday experience."],
+    ["NOTICE","What do you remember most vividly?"],
+    ["CONNECT","Which course concept might help you understand it?"],
+    ["COLLECT","Could you add a sketch, photo, quote, map or note?"],
+    ["QUESTION","What do you still not understand?"]
+  ]
+};
+
+let state = JSON.parse(localStorage.getItem("ss_state") || "{}");
+state.completed = state.completed || {};
+state.reflections = state.reflections || [];
+state.confidence = state.confidence || {};
+let currentTopic = "culture";
+let currentStep = 0;
+let selections = [];
+let currentJournal = "Photo";
+
+const view = document.getElementById("view");
+const navBtns = [...document.querySelectorAll("nav button")];
+
+function save(){ localStorage.setItem("ss_state", JSON.stringify(state)); }
+function route(name){
+  navBtns.forEach(b=>b.classList.toggle("active",b.dataset.route===name));
+  if(name==="home") renderHome();
+  if(name==="explore") renderExplore();
+  if(name==="journal") renderJournalHome();
+  if(name==="reflect") renderReflect();
+  if(name==="learning") renderLearning();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+navBtns.forEach(b=>b.addEventListener("click",()=>route(b.dataset.route)));
+
+function renderHome(){
+  const done = Object.keys(state.completed).length;
+  view.innerHTML = `
+    <section class="hero">
+      <div class="eyebrow">Reflective learning companion</div>
+      <h1>Observe. Connect.<br>Question. Reflect. Apply.</h1>
+      <p class="lede">Use what you have already seen, learned and collected to read society more carefully—and build a richer visual journal.</p>
+      <button class="primary" onclick="startTopic('${lastTopic()}')">Continue learning</button>
+    </section>
+
+    <div class="card" onclick="route('explore')">
+      <div class="kicker">EXPLORE CONCEPTS</div>
+      <h3>Understand ideas through situations</h3>
+      <p class="mini">Identity, culture, norms, artefacts, social systems, issues and place.</p>
+    </div>
+
+    <div class="card" onclick="renderJournalHome()">
+      <div class="kicker">BUILD MY JOURNAL</div>
+      <h3>Develop what you already have</h3>
+      <p class="mini">Photos, sketches, notes, interviews, observations, maps and class learning.</p>
+    </div>
+
+    <div class="card" onclick="renderChallenge()">
+      <div class="kicker">CHALLENGE ME</div>
+      <h3>Apply your learning to a new situation</h3>
+      <p class="mini">There may be more than one useful lens—and not always one correct answer.</p>
+    </div>
+
+    <div class="card flat progress-card">
+      <div class="ringwrap"><div class="ring"><span>${done}/8</span></div></div>
+      <div><strong>Concept journeys explored</strong><div class="mini">Progress is about use, not marks.</div></div>
+    </div>
+  `;
+}
+
+function lastTopic(){
+  const keys = Object.keys(state.completed);
+  return keys.length ? keys[keys.length-1] : "culture";
+}
+
+function renderExplore(){
+  view.innerHTML = `<div class="eyebrow">Learn by topic</div><h2>Explore Concepts</h2><p class="lede">Choose a lens. Each journey moves from noticing to independent application.</p>
+    <div class="grid">${topics.map(t=>`
+      <button class="topic" onclick="startTopic('${t.id}')">
+        <span class="tag">${t.tag}</span>
+        <strong>${t.title}</strong>
+        <small>${t.desc}</small>
+      </button>`).join("")}</div>`;
+}
+
+function startTopic(id){
+  currentTopic=id; currentStep=0; selections=[];
+  renderTopicIntro();
+}
+function renderTopicIntro(){
+  const t = topics.find(x=>x.id===currentTopic), a=activities[currentTopic];
+  view.innerHTML = `
+    <div class="eyebrow">${t.tag}</div>
+    <h2>${t.title}</h2>
+    <p class="lede">${a.intro}</p>
+    <div class="card flat">
+      <h3>In this journey you will</h3>
+      <div class="stack mini">
+        <div>• notice evidence</div><div>• connect concepts</div><div>• question assumptions</div>
+        <div>• shift perspective</div><div>• zoom out</div><div>• add to your journal</div><div>• apply the idea</div>
+      </div>
+    </div>
+    <button class="primary" onclick="renderJourney()">Start exploring</button>`;
+}
+
+function renderJourney(){
+  const a=activities[currentTopic];
+  const stages=["NOTICE","CONNECT","QUESTION","PERSPECTIVE","ZOOM OUT","JOURNAL","APPLY"];
+  let content="";
+  if(currentStep===0){
+    content = `<div class="card"><div class="promptlabel">Situation</div><p>${a.case}</p></div>
+      <h3>What do you notice?</h3>
+      <div>${a.notice.map((x,i)=>`<label class="choice"><input type="checkbox" value="${x}" onchange="toggleSel(this)"><span>${x}</span></label>`).join("")}</div>`;
+  } else if(currentStep===1){
+    content = `<h3>Which ideas could help you understand what you noticed?</h3>
+      <div class="lensrow">${a.lenses.map(x=>`<button class="lens" onclick="this.classList.toggle('on')">${x}</button>`).join("")}</div>
+      <div class="callout"><strong>More than one lens may be useful.</strong><br><span class="mini">Social situations rarely belong neatly to only one concept.</span></div>`;
+  } else if(currentStep===2){
+    content = `<h3>${a.question}</h3><textarea id="freeText" placeholder="Write a short response…"></textarea>
+      <div class="callout"><strong>Separate observation from interpretation.</strong><br><span class="mini">What was directly visible? What meaning are you giving it?</span></div>`;
+  } else if(currentStep===3){
+    content = `<h3>See it differently</h3><p>${a.perspective}</p><textarea id="freeText" placeholder="Try another point of view…"></textarea>`;
+  } else if(currentStep===4){
+    content = `<h3>Zoom out</h3>
+      <p>What larger relationships, institutions, histories, infrastructures or cultural values may influence this situation?</p>
+      <div class="stack">
+        <button class="ghost">Individual — direct choices / experience</button>
+        <button class="ghost">Micro — family, peers, immediate settings</button>
+        <button class="ghost">Meso — relationships between immediate settings</button>
+        <button class="ghost">Exo — institutions, policy, media, infrastructure</button>
+        <button class="ghost">Macro — culture, history, economy, values</button>
+      </div>`;
+  } else if(currentStep===5){
+    content = `<div class="kicker">BUILD MY JOURNAL</div><h3>${a.journal}</h3>
+      <div class="card flat">
+        <div class="promptlabel">Use the journal language</div>
+        <p><strong>I SAW</strong> — evidence</p>
+        <p><strong>I THINK</strong> — interpretation</p>
+        <p><strong>I WONDER</strong> — question</p>
+        <p><strong>I CONNECT</strong> — course concept</p>
+      </div>`;
+  } else if(currentStep===6){
+    content = `<div class="kicker">APPLY</div><h3>${a.apply}</h3>
+      <textarea id="freeText" placeholder="Where would you apply this idea?"></textarea>
+      <div class="divider"></div>
+      <div class="promptlabel">How confident are you now?</div>
+      <div class="confidence">
+        ${["I have encountered this idea","I can explain it","I can recognise it in real life","I can connect it with other ideas","I can apply it independently"].map((x,i)=>`<button class="conf" onclick="setConfidence(${i+1},this)">${x}</button>`).join("")}
+      </div>`;
+  }
+  view.innerHTML = `
+    <div class="eyebrow">${stages[currentStep]} · ${currentStep+1} of 7</div>
+    <div class="stagebar">${stages.map((s,i)=>`<div class="stage ${i<=currentStep?'on':''}"></div>`).join("")}</div>
+    ${content}
+    <div class="stack" style="margin-top:18px">
+      <button class="primary" onclick="nextJourney()">${currentStep===6?'Finish journey':'Continue'}</button>
+      ${currentStep>0?'<button class="ghost" onclick="prevJourney()">Back</button>':''}
+    </div>`;
+}
+
+function toggleSel(el){ el.closest(".choice").classList.toggle("selected",el.checked); }
+function setConfidence(n,el){
+  document.querySelectorAll(".conf").forEach(x=>x.classList.remove("on"));
+  el.classList.add("on");
+  state.confidence[currentTopic]=n; save();
+}
+function nextJourney(){
+  const ft=document.getElementById("freeText");
+  if(ft && ft.value.trim()) state.reflections.push({topic:currentTopic, text:ft.value.trim(), date:new Date().toISOString()});
+  save();
+  if(currentStep<6){currentStep++;renderJourney();}
+  else{
+    state.completed[currentTopic]=true; save();
+    view.innerHTML=`<div class="eyebrow">Journey complete</div><h2>You explored ${topics.find(x=>x.id===currentTopic).title}</h2>
+      <div class="card">
+        <h3>You practised</h3>
+        <p>Noticing evidence → connecting concepts → questioning assumptions → shifting perspective → zooming out → documenting → applying.</p>
+      </div>
+      <button class="primary" onclick="route('home')">Return home</button>
+      <button class="ghost" style="margin-top:10px;width:100%" onclick="renderJournalHome()">Add to my journal</button>`;
+  }
+}
+function prevJourney(){ if(currentStep>0){currentStep--;renderJourney();} }
+
+function renderJournalHome(){
+  navBtns.forEach(b=>b.classList.toggle("active",b.dataset.route==="journal"));
+  view.innerHTML=`<div class="eyebrow">Visual journal companion</div><h2>What are you working with?</h2>
+    <p class="lede">Choose what you already have. The app will help you deepen it—not replace your journal.</p>
+    <div class="journal-grid">
+      ${Object.keys(journalPrompts).map(k=>`<button class="journal-opt" onclick="renderJournal('${k.replaceAll("'","\\'")}')"><strong>${k}</strong><span>Open prompts</span></button>`).join("")}
+    </div>`;
+}
+function renderJournal(kind){
+  currentJournal=kind;
+  view.innerHTML=`<div class="eyebrow">Build My Journal</div><h2>${kind}</h2>
+    <p class="lede">Use any three prompts. Add the thinking to your physical or digital visual journal.</p>
+    <div class="reflection-row">
+      ${journalPrompts[kind].map(([lab,q])=>`<div class="card flat"><div class="promptlabel">${lab}</div><p>${q}</p></div>`).join("")}
+    </div>
+    <div class="callout"><strong>Journal action</strong><br><span class="mini">Add a sketch, image, quote, map, annotation or short note—then make at least one conceptual connection.</span></div>
+    <button class="primary" onclick="renderQuickReflection()">I added to my journal</button>`;
+}
+function renderQuickReflection(){
+  view.innerHTML=`<div class="eyebrow">Reflect</div><h2>What changed?</h2>
+    <p class="lede">Keep this short. The fuller evidence remains in your visual journal.</p>
+    <textarea id="journalReflection" placeholder="One thing I now understand differently is…"></textarea>
+    <button class="primary" style="margin-top:12px" onclick="saveJournalReflection()">Save reflection</button>`;
+}
+function saveJournalReflection(){
+  const v=document.getElementById("journalReflection").value.trim();
+  if(v) state.reflections.push({topic:"journal",text:v,date:new Date().toISOString()});
+  save(); route("learning");
+}
+
+function renderChallenge(){
+  navBtns.forEach(b=>b.classList.remove("active"));
+  view.innerHTML=`<div class="eyebrow">Challenge Me</div><h2>Use more than one lens</h2>
+    <div class="card"><p><strong>At lunchtime you notice that students from similar linguistic regions frequently sit together.</strong></p></div>
+    <h3>What could help you investigate this situation?</h3>
+    <div class="lensrow">
+      ${["Identity","Culture","Friendship networks","Norms","Spatial organisation","Institutions","Belonging","Inequality"].map(x=>`<button class="lens" onclick="this.classList.toggle('on')">${x}</button>`).join("")}
+    </div>
+    <div class="divider"></div>
+    <h3>Before making a conclusion…</h3>
+    <textarea placeholder="What would you need to observe or ask?"></textarea>
+    <div class="callout"><strong>Critical move:</strong><br><span class="mini">An observation is not yet an explanation. Look for alternative explanations and evidence.</span></div>
+    <button class="primary" onclick="route('home')">Finish challenge</button>`;
+}
+
+function renderReflect(){
+  view.innerHTML=`<div class="eyebrow">Reflection space</div><h2>Look back differently</h2>
+    <p class="lede">Choose one prompt and respond briefly. Add the richer version to your journal if useful.</p>
+    ${[
+      "Something I considered normal earlier, but now see differently…",
+      "A place I experience differently from somebody else might be…",
+      "One social system I depend on but rarely notice is…",
+      "One observation I may have interpreted too quickly is…",
+      "One question I want to carry into my next field observation is…"
+    ].map((q,i)=>`<div class="card flat"><div class="promptlabel">PROMPT ${i+1}</div><p>${q}</p><button class="secondary" onclick="answerReflect('${q.replaceAll("'","\\'")}')">Respond</button></div>`).join("")}`;
+}
+function answerReflect(q){
+  view.innerHTML=`<div class="eyebrow">Reflect</div><h2>${q}</h2><textarea id="rtext" placeholder="Write a short reflection…"></textarea>
+  <button class="primary" style="margin-top:12px" onclick="saveReflect()">Save reflection</button>`;
+}
+function saveReflect(){
+  const v=document.getElementById("rtext").value.trim();
+  if(v) state.reflections.push({topic:"reflection",text:v,date:new Date().toISOString()});
+  save(); renderReflect();
+}
+
+function renderLearning(){
+  const explored=Object.keys(state.completed);
+  view.innerHTML=`<div class="eyebrow">My Learning</div><h2>Progress through use</h2>
+    <p class="lede">This is not a marks page. It shows what you have explored, reflected on and begun to apply.</p>
+    <div class="card">
+      <h3>Concept journeys</h3>
+      ${topics.map(t=>`<p><strong>${t.title}</strong><br><span class="mini">${state.completed[t.id]?'Explored':'Not yet explored'} · ${confidenceText(state.confidence[t.id])}</span></p>`).join("")}
+    </div>
+    <div class="card">
+      <h3>Saved reflections</h3>
+      <p class="mini">${state.reflections.length} short reflections saved on this device.</p>
+      ${state.reflections.slice(-5).reverse().map(r=>`<div class="divider"></div><p>${escapeHtml(r.text)}</p>`).join("")}
+    </div>
+    <button class="ghost" onclick="resetData()">Reset prototype data</button>`;
+}
+function confidenceText(n){
+  return ["No confidence check yet","Encountered","Can explain","Can recognise","Can connect","Can apply independently"][n||0];
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}
+function resetData(){if(confirm("Reset saved prototype progress?")){localStorage.removeItem("ss_state");location.reload();}}
+
+renderHome();
+</script>
+</body>
+</html>
